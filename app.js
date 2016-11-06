@@ -16,8 +16,11 @@ var app = express();
 // load router
 var api = require('./routes/api');
 
+var config = require('./config/database');
+
 // connect to database
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect(config.database);
+
 // load model
 var Task = require('./models/task');
 
