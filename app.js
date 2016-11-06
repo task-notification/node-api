@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// configure router
+// configure router - register routes
 app.use('/api', api);
 
 // catch 404 and forward to error handler
