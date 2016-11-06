@@ -66,11 +66,9 @@ router.post('/authenticate', function(req, res) {
     });
 });
 
-
 /**
  * SECURITY: middleware to protect API
  *************************************************************************************************/
-
 getToken = function (headers) {
     if (headers && headers.authorization) {
         var parted = headers.authorization.split(' ');
@@ -96,8 +94,18 @@ router.use(function(req, res, next) {
                 return res.status(403).json({ success: false, message: 'Failed to authenticate token.' });
             } else {
                 // if everything is good, save to request for use in other routes
-                req.decoded = decoded;
-                next();
+                User.findOne({
+                    name: decoded.name
+                }, function(err, user) {
+                    if (err) throw err;
+
+                    if (!user) {
+                        return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
+                    } else {
+                        req.user = user;
+                        next();
+                    }
+                });
             }
         });
     } else {
@@ -112,31 +120,14 @@ router.use(function(req, res, next) {
 /**
  * TASKS
  *************************************************************************************************/
-router.get('/memberinfo', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if (token) {
-        var decoded = jwt.decode(token, config.secret);
-        User.findOne({
-            name: decoded.name
-        }, function(err, user) {
-            if (err) throw err;
-
-            if (!user) {
-                return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
-            } else {
-                res.json({success: true, msg: 'Welcome in the member area ' + user.name + '!'});
-            }
-        });
-    } else {
-        return res.status(403).send({success: false, msg: 'No token provided.'});
-    }
-});
-
 router.route('/tasks')
     // create a task (accessed from POST)
     .post(function(req, res){
         var task = new Task();                      // create a new instance of Task model
+        var user = req.user;                        // get user from request
+
         task.description = req.body.description;    // set description from the request
+        task.user = user._id;
 
         // save task and check for error
         task.save(function(err){
@@ -147,11 +138,11 @@ router.route('/tasks')
             res.json({ message: 'Task created!'});
         });
     })
+
     // get all tasks (accessed from GET)
     .get(function(req, res){
-        var decoded = req.decoded;                  // get decoded token from request
-        console.log("User " + decoded.name + " requested all tasks" );
-        Task.find(function (err, tasks) {
+        var user = req.user;                  // get user from request
+        Task.find({ user: user._id }, function (err, tasks) {
             if(err)
             {
                 res.send(err);
