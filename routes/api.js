@@ -147,8 +147,10 @@ router.route('/tasks')
             res.json({ message: 'Task created!'});
         });
     })
-
+    // get all tasks (accessed from GET)
     .get(function(req, res){
+        var decoded = req.decoded;                  // get decoded token from request
+        console.log("User " + decoded.name + " requested all tasks" );
         Task.find(function (err, tasks) {
             if(err)
             {
