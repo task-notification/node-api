@@ -18,6 +18,8 @@ var api = require('./routes/api');
 
 // connect to database
 mongoose.connect('mongodb://localhost:27017');
+// load model
+var Task = require('./app/models/task');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
