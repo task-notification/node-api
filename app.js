@@ -11,7 +11,6 @@ var cookieParser    = require('cookie-parser');
 var bodyParser      = require('body-parser');
 var mongoose        = require('mongoose');
 var passport        = require('passport');
-var jwt             = require('jwt-simple');
 
 // define app using express
 var app = express();

@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var jwt = require('jwt-simple');
+var passport = require('passport');
+var config = require('../config/database'); // get db config file
 
 // load model
 var Task = require('../models/task');
@@ -18,6 +21,39 @@ router.get('/', function (req, res) {
     res.json({message: 'welcome to our api'});
 });
 
+// route to a restricted info (GET http://localhost:8080/api/memberinfo)
+router.get('/memberinfo', passport.authenticate('jwt', { session: false}), function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+        var decoded = jwt.decode(token, config.secret);
+        User.findOne({
+            name: decoded.name
+        }, function(err, user) {
+            if (err) throw err;
+
+            if (!user) {
+                return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
+            } else {
+                res.json({success: true, msg: 'Welcome in the member area ' + user.name + '!'});
+            }
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'No token provided.'});
+    }
+});
+
+getToken = function (headers) {
+    if (headers && headers.authorization) {
+        var parted = headers.authorization.split(' ');
+        if (parted.length === 2) {
+            return parted[1];
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+};
 
 /**
  * USER
@@ -38,6 +74,31 @@ router.post('/signup', function(req, res) {
             res.json({success: true, msg: 'Successful created new user.'});
         });
     }
+});
+
+// route to authenticate a user (POST http://localhost:8080/api/authenticate)
+router.post('/authenticate', function(req, res) {
+    User.findOne({
+        name: req.body.name
+    }, function(err, user) {
+        if (err) throw err;
+
+        if (!user) {
+            res.send({success: false, msg: 'Authentication failed. User not found.'});
+        } else {
+            // check if password matches
+            user.comparePassword(req.body.password, function (err, isMatch) {
+                if (isMatch && !err) {
+                    // if user is found and password is right create a token
+                    var token = jwt.encode(user, config.secret);
+                    // return the information including token as JSON
+                    res.json({success: true, token: 'JWT ' + token});
+                } else {
+                    res.send({success: false, msg: 'Authentication failed. Wrong password.'});
+                }
+            });
+        }
+    });
 });
 
 /**
