@@ -10,6 +10,8 @@ var logger          = require('morgan');
 var cookieParser    = require('cookie-parser');
 var bodyParser      = require('body-parser');
 var mongoose        = require('mongoose');
+var passport        = require('passport');
+var jwt             = require('jwt-simple');
 
 // define app using express
 var app = express();
@@ -20,9 +22,6 @@ var config = require('./config/database');
 
 // connect to database
 mongoose.connect(config.database);
-
-// load model
-var Task = require('./models/task');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,6 +34,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(passport.initialize());
+// pass passport for configuration
+require('./config/passport')(passport);
 
 // configure router - register routes
 app.use('/api', api);

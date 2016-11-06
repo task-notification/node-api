@@ -3,6 +3,7 @@ var router = express.Router();
 
 // load model
 var Task = require('../models/task');
+var User = require('../models/user');
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -17,7 +18,31 @@ router.get('/', function (req, res) {
     res.json({message: 'welcome to our api'});
 });
 
-/* routes ending with /tasks */
+
+/**
+ * USER
+ *************************************************************************************************/
+router.post('/signup', function(req, res) {
+    if (!req.body.name || !req.body.password) {
+        res.json({success: false, msg: 'Please pass name and password.'});
+    } else {
+        var newUser = new User({
+            name: req.body.name,
+            password: req.body.password
+        });
+        // save the user
+        newUser.save(function(err) {
+            if (err) {
+                return res.json({success: false, msg: 'Username already exists.'});
+            }
+            res.json({success: true, msg: 'Successful created new user.'});
+        });
+    }
+});
+
+/**
+ * TASKS
+ *************************************************************************************************/
 router.route('/tasks')
     // create a task (accessed from POST)
     .post(function(req, res){
