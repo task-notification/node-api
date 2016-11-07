@@ -10,9 +10,9 @@ var User = require('../models/user');
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    // do logging
+    // TODO: logging
     console.log('Something is happening.');
-    next(); // make sure we go to the next routes and don't stop here
+    next(); // go to the next routes and don't stop here
 });
 
 /* GET home page. */
@@ -41,7 +41,7 @@ router.post('/signup', function(req, res) {
     }
 });
 
-// route to authenticate a user (POST http://localhost:8080/api/authenticate)
+// route to authenticate a user (POST /api/authenticate)
 router.post('/authenticate', function(req, res) {
     User.findOne({
         name: req.body.name
@@ -121,7 +121,7 @@ router.use(function(req, res, next) {
  * TASKS
  *************************************************************************************************/
 router.route('/tasks')
-    // create a task (accessed from POST)
+    // create a task (accessed from POST /api/tasks)
     .post(function(req, res){
         var task = new Task();                      // create a new instance of Task model
         var user = req.user;                        // get user from request
@@ -139,7 +139,7 @@ router.route('/tasks')
         });
     })
 
-    // get all tasks (accessed from GET)
+    // get all tasks (accessed from GET /api/tasks)
     .get(function(req, res){
         var user = req.user;                  // get user from request
         Task.find({ user: user._id }, function (err, tasks) {
@@ -153,7 +153,7 @@ router.route('/tasks')
 
 // routes ending with /tasks/:taskId
 router.route('/tasks/:taskId')
-    // get task by ID
+    // get task by ID (accessed from GET /api/tasks/:taskId)
     .get(function(req, res){
         Task.findById(req.params.taskId, function(err, task){
             if(err)
@@ -161,7 +161,7 @@ router.route('/tasks/:taskId')
             res.json(task);
         });
     })
-    // update task by ID
+    // update task by ID (accessed from PUT /api/tasks/:taskId)
     .put(function(req, res){
         Task.findById(req.params.taskId, function (err, task) {
             if(err)
@@ -179,7 +179,7 @@ router.route('/tasks/:taskId')
             });
         });
     })
-    // delete task by ID
+    // delete task by ID (accessed from DELETE /api/tasks/:taskId)
     .delete(function (req, res) {
         Task.remove({
             _id: req.params.taskId
@@ -189,7 +189,6 @@ router.route('/tasks/:taskId')
 
             res.json({ message: 'Task successfully deleted!'});
         });
-        
     });
 
 module.exports = router;
