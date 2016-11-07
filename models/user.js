@@ -1,8 +1,15 @@
+/**
+ * USER Entity
+ *
+ * @author Michael Müller <development@reu-network.de>
+ */
+
+// load ORM
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 
-// set up a mongoose model
+// create user schema
 var UserSchema = new Schema({
     name: String,
     username: {

@@ -1,3 +1,9 @@
+/**
+ * API routing file
+ *
+ * @author Michael Müller <development@reu-network.de>
+ */
+
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
