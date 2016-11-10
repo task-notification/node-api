@@ -31,19 +31,23 @@ router.get('/', function (req, res) {
  *************************************************************************************************/
 router.post('/signup', function(req, res) {
     if (!req.body.username || !req.body.password || !req.body.email) {
-        res.json({success: false, msg: 'Please pass username, email and password.'});
+        res.json({success: false, message: 'Please pass username, email and password.'});
     } else {
+        var now = new Date();
         var newUser = new User({
             username: req.body.username,
             password: req.body.password,
-            email: req.body.email
+            email: req.body.email,
+            admin: false,
+            created_at: now,
+            updated_at: now
         });
         // save the user
         newUser.save(function(err) {
             if (err) {
-                return res.json({success: false, msg: 'Username or email already exists.'});
+                return res.json({success: false, message: 'Username or email already exists.'});
             }
-            res.json({success: true, msg: 'Successful created new user.'});
+            res.json({success: true, message: 'Successful created new user.'});
         });
     }
 });
@@ -56,7 +60,7 @@ router.post('/authenticate', function(req, res) {
         if (err) throw err;
 
         if (!user) {
-            res.send({success: false, msg: 'Authentication failed. User not found.'});
+            res.send({success: false, message: 'Authentication failed. User not found.'});
         } else {
             // check if password matches
             user.comparePassword(req.body.password, function (err, isMatch) {
@@ -66,7 +70,7 @@ router.post('/authenticate', function(req, res) {
                     // return the information including token as JSON
                     res.json({success: true, token: 'JWT ' + token});
                 } else {
-                    res.send({success: false, msg: 'Authentication failed. Wrong password.'});
+                    res.send({success: false, message: 'Authentication failed. Wrong password.'});
                 }
             });
         }
@@ -107,7 +111,7 @@ router.use(function(req, res, next) {
                     if (err) throw err;
 
                     if (!user) {
-                        return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
+                        return res.status(403).send({success: false, message: 'Authentication failed. User not found.'});
                     } else {
                         req.user = user;
                         next();
