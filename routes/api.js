@@ -52,7 +52,7 @@ router.post('/signup', function(req, res) {
     }
 });
 
-router.post('/subscribe/:subId', function (req, res) {
+router.get('/subscribe/:subId', function (req, res) {
     res.json({ success: true, message: 'Eigentlich würden wir jetzt die ID ' + req.params.subId + 'in der DB speichern. ÄTSCH. Machen wir aber nicht! :D'});
 });
 
