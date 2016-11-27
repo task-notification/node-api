@@ -9,6 +9,7 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 var passport = require('passport');
 var config = require('../config/database'); // get db config file
+var constants = require('../constants/constants.json');
 
 // load model
 var Task = require('../models/task');
