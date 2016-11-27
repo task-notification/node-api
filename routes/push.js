@@ -13,10 +13,6 @@ var devicesFunction = require('../functions/devices');
 var deleteFunction = require('../functions/delete');
 var sendFunction = require('../functions/send-message');
 
-// load model
-var Device = require('../models/device');
-var User = require('../models/user');
-
 router.post('/devices', function (req, res) {
 
     var deviceName = req.body.deviceName;
@@ -43,9 +39,42 @@ router.post('/devices', function (req, res) {
 
             if (result.result != 'error') {
 
-                io.emit('update', {message: 'New Device Added', update: true});
+                console.log("New device added");
+                // io.emit('update', {message: 'New Device Added', update: true});
 
             }
         });
     }
+});
+
+router.get('/devices',function(req,res) {
+
+    devicesFunction.listDevices(function(result) {
+
+        res.json(result);
+
+    });
+});
+
+router.delete('/devices/:device',function(req,res) {
+
+    var registrationId = req.params.device;
+
+    deleteFunction.removeDevice(registrationId,function(result) {
+
+        res.json(result);
+
+    });
+
+});
+
+router.post('/send',function(req,res){
+
+    var message = req.body.message;
+    var registrationId = req.body.registrationId;
+
+    sendFunction.sendMessage(message,registrationId,function(result){
+
+        res.json(result);
+    });
 });
