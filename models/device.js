@@ -10,9 +10,9 @@ var Schema = mongoose.Schema;
 
 // create task schema
 var deviceSchema = new Schema({
-    deviceName         : String,
-    deviceId        : String,
-    registrationId    : String
+    deviceName : String,
+    deviceId : String,
+    registrationId : String
 });
 
 module.exports = mongoose.model('Device', deviceSchema);

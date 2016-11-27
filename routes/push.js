@@ -78,3 +78,6 @@ router.post('/send',function(req,res){
         res.json(result);
     });
 });
+
+
+module.exports = router;

@@ -10,12 +10,12 @@
 var gcm = require('node-gcm');
 var constants = require('../constants/constants.json');
 
-exports.sendMessage = function(message,registrationId,callback){
+exports.sendMessage = function (message, registrationId, callback) {
 
     var message = new gcm.Message({data: {message: message}});
     var regTokens = [registrationId];
     var sender = new gcm.Sender(constants.gcm_api_key);
-    sender.send(message, { registrationTokens: regTokens }, function (err, response) {
+    sender.send(message, {registrationTokens: regTokens}, function (err, response) {
 
         if (err)
         {

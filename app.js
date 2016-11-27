@@ -16,6 +16,7 @@ var passport        = require('passport');
 var app = express();
 // load router
 var api = require('./routes/api');
+var push = require('./routes/push');
 
 var config = require('./config/database');
 
@@ -40,6 +41,7 @@ require('./config/passport')(passport);
 
 // configure router - register routes
 app.use('/api', api);
+app.use('/push', push);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
