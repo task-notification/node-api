@@ -1,6 +1,14 @@
 {
   "gcm_api_key": "AIzaSyDYACIUMWf8lSrgHY26OchO_ENjgJQBfJk",
   "error": {
+    "msg_signup_invalid_param":{
+      "result": "error",
+      "message": "Please pass username, email and password."
+    },
+    "msg_signup_invalid_username":{
+      "result": "error",
+      "message": "Username or email already exists."
+    },
     "msg_invalid_param": {
       "result": "error",
       "message": "Invalid request parameters."

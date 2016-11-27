@@ -32,7 +32,7 @@ router.get('/', function (req, res) {
  *************************************************************************************************/
 router.post('/signup', function(req, res) {
     if (!req.body.username || !req.body.password || !req.body.email) {
-        res.json({success: false, message: 'Please pass username, email and password.'});
+        res.json({success: false, message: constants.error.msg_signup_invalid_param.message });
     } else {
         var now = new Date();
         var newUser = new User({
@@ -46,7 +46,7 @@ router.post('/signup', function(req, res) {
         // save the user
         newUser.save(function(err) {
             if (err) {
-                return res.json({success: false, message: 'Username or email already exists.'});
+                return res.json({success: false, message: constants.error.msg_signup_invalid_username });
             }
             res.json({success: true, message: 'Successful created new user.'});
         });
