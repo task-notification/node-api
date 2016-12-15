@@ -13,6 +13,15 @@ var devicesFunction = require('../functions/devices');
 var deleteFunction = require('../functions/delete');
 var sendFunction = require('../functions/send-message');
 
+// middleware to use for all requests
+router.use(function(req, res, next) {
+    // TODO: logging
+    console.log('Something is happening.');
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next(); // go to the next routes and don't stop here
+});
+
 router.post('/devices', function (req, res) {
 
     var deviceName = req.body.deviceName;
@@ -22,7 +31,6 @@ router.post('/devices', function (req, res) {
     if (typeof deviceName == 'undefined' || typeof deviceId == 'undefined' || typeof registrationId == 'undefined') {
 
         console.log(constants.error.msg_invalid_param.message);
-
         res.json(constants.error.msg_invalid_param);
 
     } else if (!deviceName.trim() || !deviceId.trim() || !registrationId.trim()) {
