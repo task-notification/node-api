@@ -17,8 +17,6 @@ var User = require('../models/user');
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    // TODO: logging
-    console.log('Something is happening.');
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next(); // go to the next routes and don't stop here
@@ -48,9 +46,10 @@ router.post('/signup', function(req, res) {
         // save the user
         newUser.save(function(err) {
             if (err) {
-                return res.json({success: false, message: constants.error.msg_signup_invalid_username });
+                res.json({success: false, message: constants.error.msg_signup_invalid_username.message });
             }
-            res.json({success: true, message: 'Successful created new user.'});
+            else
+                res.json({success: true, message: 'Successful created new user.'});
         });
     }
 });
@@ -72,10 +71,11 @@ router.post('/authenticate', function(req, res) {
             // check if password matches
             user.comparePassword(req.body.password, function (err, isMatch) {
                 if (isMatch && !err) {
+                    console.log(user);
                     // if user is found and password is right create a token
-                    var token = jwt.sign(user, config.secret);
+                    var token = jwt.sign(JSON.stringify(user), config.secret);
                     // return the information including token as JSON
-                    res.json({success: true, token: 'JWT ' + token});
+                    res.json({success: true, token: token});
                 } else {
                     res.send({success: false, message: 'Authentication failed. Wrong password.'});
                 }
@@ -89,6 +89,7 @@ router.post('/authenticate', function(req, res) {
  *************************************************************************************************/
 getToken = function (headers) {
     if (headers && headers.authorization) {
+        return headers.authorization;
         var parted = headers.authorization.split(' ');
         if (parted.length === 2) {
             return parted[1];
@@ -101,6 +102,7 @@ getToken = function (headers) {
 };
 
 router.use(function(req, res, next) {
+    console.log(req.headers);
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'] || getToken(req.headers);
 
@@ -146,7 +148,7 @@ router.route('/tasks')
 
         task.description = req.body.description;    // set description from the request
         task.user = user._id;
-
+        
         // save task and check for error
         task.save(function(err){
             if(err)

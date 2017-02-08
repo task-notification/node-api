@@ -12,7 +12,21 @@ var constants = require('../constants/constants.json');
 
 exports.sendMessage = function (message, registrationId, callback) {
 
-    var message = new gcm.Message({data: {message: message}});
+    var message = new gcm.Message();
+    // ({
+    //     data: {
+    //         message: message
+    //     },
+    //     notification: {
+    //         title: "Hello, World",
+    //         icon: "ic_launcher",
+    //         body: "This is a notification that will be displayed if your app is in the background."
+    //     }
+    // });
+    message.collapseKey = 'demo';
+    message.delayWhileIdle = true;
+    message.timeToLive = 3;
+
     var regTokens = [registrationId];
     var sender = new gcm.Sender(constants.gcm_api_key);
     sender.send(message, {registrationTokens: regTokens}, function (err, response) {
