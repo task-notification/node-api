@@ -29,13 +29,13 @@ exports.sendMessage = function (message, registrationId, callback) {
 
     var regTokens = [registrationId];
     var sender = new gcm.Sender(constants.gcm_api_key);
+
     sender.send(message, {registrationTokens: regTokens}, function (err, response) {
 
         if (err)
         {
             console.error(err);
             callback(constants.error.msg_send_failure);
-
         }
         else
         {

@@ -12,7 +12,8 @@ var Schema = mongoose.Schema;
 var deviceSchema = new Schema({
     deviceName : String,
     deviceId : String,
-    registrationId : String
+    registrationId : String,
+    user:  {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
 module.exports = mongoose.model('Device', deviceSchema);
