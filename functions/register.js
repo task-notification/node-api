@@ -9,14 +9,14 @@
 var device = require('../models/device');
 var constants = require('../constants/constants.json');
 
-exports.register = function (deviceName, deviceId, registrationId, user, endpoint, callback) {
+exports.register = function (deviceName, deviceId, registrationId, endpoint, user, callback) {
 
     var newDevice = new device({
         deviceName: deviceName,
         deviceId: deviceId,
         registrationId: registrationId,
-        user: user,
         endpoint: endpoint,
+        user: user
     });
 
     device.find({registrationId: registrationId, user: user, endpoint: endpoint}, function (err, devices) {

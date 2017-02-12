@@ -15,6 +15,8 @@ var devicesFunction = require('../functions/devices');
 var deleteFunction = require('../functions/delete');
 var sendFunction = require('../functions/send-message');
 
+var payloads = {};
+
 // middleware to use for all requests
 router.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -26,13 +28,28 @@ router.use(function(req, res, next) {
 var User = require('../models/user');
 
 
-router.get("/latest", function(req, res){
+router.post('/send',function(req,res){
+    var message = req.body.message;
+    var registrationId = req.body.registrationId;
 
+    var content = {
+        title: req.body.title,
+        body: req.body.body,
+        icon: req.body.icon,
+        type: req.body.type
+    };
+
+    payloads[registrationId] = content;
+    console.log("registrationId:", registrationId);
+    sendFunction.sendMessage(message, registrationId, function(result){
+        res.json(result);
+    });
 });
 
-/**
- *  DEBUG: Auch ohne token erreichbar
- */
+router.get("/getPayload/:registrationId", function(req, res){
+    var registrationId = req.params.registrationId;
+    res.json(payloads[registrationId]);
+});
 
 
 /**
@@ -57,7 +74,6 @@ router.use(function(req, res, next) {
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'] || getToken(req.headers);
 
-    console.log("token", token);
     // decode token
     if (token) {
         // verifies secret and checks exp
@@ -89,17 +105,6 @@ router.use(function(req, res, next) {
     }
 });
 
-router.post('/send',function(req,res){
-
-    var message = req.body.message;
-    var user = req.user;
-
-    sendFunction.sendMessage(message,user,function(result){
-        res.json(result);
-    });
-});
-
-
 /**
  * DEVICES
  */
@@ -116,14 +121,14 @@ router.post('/devices', function (req, res) {
         console.log(constants.error.msg_invalid_param.message);
         res.json(constants.error.msg_invalid_param);
 
-    } else if (!deviceName.trim() || !deviceId.trim() || !registrationId.trim()) {
+    } else if (!deviceName.trim() || !deviceId.trim() || !registrationId.trim() || !endpoint.trim()) {
 
         console.log(constants.error.msg_empty_param.message);
         res.json(constants.error.msg_empty_param);
 
     } else {
 
-        registerFunction.register(deviceName, deviceId, registrationId, req.user, function (result) {
+        registerFunction.register(deviceName, deviceId, registrationId, endpoint, req.user, function (result) {
             res.json(result);
             if (result.result != 'error') {
                 console.log("New device added");
