@@ -9,8 +9,9 @@
 
 var gcm = require('node-gcm');
 var constants = require('../constants/constants.json');
+var devicesFunction = require('../functions/devices');
 
-exports.sendMessage = function (message, registrationId, callback) {
+exports.sendMessage = function (message, user, callback) {
 
     var message = new gcm.Message();
     // ({
@@ -27,7 +28,14 @@ exports.sendMessage = function (message, registrationId, callback) {
     message.delayWhileIdle = true;
     message.timeToLive = 3;
 
-    var regTokens = [registrationId];
+    regTokens = deviceFunctions.listDevicesByUser(user, function(devices){
+    	var tokens = [];	
+    	devices.forEach(function(item, index){
+    			tokens[index] = item.registrationId;
+    		});
+    	return JSON.stringify(tokens);
+    });
+    
     var sender = new gcm.Sender(constants.gcm_api_key);
 
     sender.send(message, {registrationTokens: regTokens}, function (err, response) {

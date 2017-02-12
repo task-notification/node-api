@@ -33,15 +33,6 @@ router.get("/latest", function(req, res){
 /**
  *  DEBUG: Auch ohne token erreichbar
  */
-router.post('/send',function(req,res){
-
-    var message = req.body.message;
-    var registrationId = req.body.registrationId;
-
-    sendFunction.sendMessage(message,registrationId,function(result){
-        res.json(result);
-    });
-});
 
 
 /**
@@ -98,6 +89,17 @@ router.use(function(req, res, next) {
     }
 });
 
+router.post('/send',function(req,res){
+
+    var message = req.body.message;
+    var user = req.user;
+
+    sendFunction.sendMessage(message,user,function(result){
+        res.json(result);
+    });
+});
+
+
 /**
  * DEVICES
  */
@@ -107,8 +109,9 @@ router.post('/devices', function (req, res) {
     var deviceName = req.body.deviceName;
     var deviceId = req.body.deviceId;
     var registrationId = req.body.registrationId;
+    var endpoint = req.body.endpoint;
 
-    if (typeof deviceName == 'undefined' || typeof deviceId == 'undefined' || typeof registrationId == 'undefined') {
+    if (typeof deviceName == 'undefined' || typeof deviceId == 'undefined' || typeof registrationId == 'undefined' || typeof endpoint == 'undefined') {
 
         console.log(constants.error.msg_invalid_param.message);
         res.json(constants.error.msg_invalid_param);

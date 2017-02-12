@@ -12,6 +12,7 @@ var Schema = mongoose.Schema;
 var deviceSchema = new Schema({
     deviceName : String,
     deviceId : String,
+    endpoint : String,
     registrationId : String,
     user:  {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });

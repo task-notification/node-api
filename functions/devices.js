@@ -15,3 +15,10 @@ exports.listDevices = function (callback) {
     });
 }
 
+exports.listDevicesByUser = function (user, callback){ 
+	device.find({user:user}, function (err, devices) {
+		if (!err)
+			callback(devices);
+	});
+}
+
