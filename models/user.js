@@ -1,7 +1,6 @@
 /**
  * USER Entity
  *
- * @author Michael Müller <development@reu-network.de>
  */
 
 // load ORM

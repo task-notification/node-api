@@ -3,7 +3,6 @@
  *
  * function to add device to MongoDB
  *
- * @author Michael Müller <development@reu-network.de>
  */
 
 var device = require('../models/device');

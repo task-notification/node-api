@@ -4,7 +4,6 @@
  * used to send message to GCM server which further delivers the message to the device.
  * (using node-gcm module)
  *
- * @author Michael Müller <development@reu-network.de>
  */
 
 var gcm = require('node-gcm');
@@ -17,16 +16,7 @@ var User = require('../models/user');
 exports.sendMessage = function (message, registrationId, callback)
 {
     var message = new gcm.Message();
-    // ({
-    //     data: {
-    //         message: message
-    //     },
-    //     notification: {
-    //         title: "Hello, World",
-    //         icon: "ic_launcher",
-    //         body: "This is a notification that will be displayed if your app is in the background."
-    //     }
-    // });
+
     message.collapseKey = 'demo';
     message.delayWhileIdle = true;
     message.timeToLive = 3;

@@ -2,6 +2,8 @@
 
 ## Installation
 
+node-server should listen on port ``3000``
+
 ### clone repository
 
 ```bash
@@ -12,6 +14,18 @@ git clone https://github.com/task-notification/node-api.git
 
 ```bash
 npm install
+```
+
+### configure MongoDB
+
+create file ``config/database.js``
+
+```javascript
+// config/database.js
+module.exports = {
+    'secret': 'ThisIsNotASecretToken',
+    'database': 'mongodb://USERNAME:PASSWORD@DBHOST:DBPORT/DBNAME'
+};
 ```
 
 ## API

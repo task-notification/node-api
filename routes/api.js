@@ -1,7 +1,6 @@
 /**
  * API routing file
  *
- * @author Michael Müller <development@reu-network.de>
  */
 
 var express = require('express');
@@ -148,7 +147,7 @@ router.route('/tasks')
 
         task.description = req.body.description;    // set description from the request
         task.user = user._id;
-        
+
         // save task and check for error
         task.save(function(err){
             if(err)

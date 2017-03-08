@@ -1,7 +1,6 @@
 /**
- * send-push routing file
+ * PUSH-API routing file
  *
- * @author Michael Müller <development@reu-network.de>
  */
 
 var express = require('express');
