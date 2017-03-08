@@ -35,7 +35,13 @@ exports.register = function (deviceName, deviceId, registrationId, endpoint, use
         }
         else
         {
-            callback(constants.error.msg_reg_exists);
+            if(devices[0].registrationId !== registrationId)
+            {
+                devices[0].registrationId = registrationId;
+                devices[0].save();
+                callback(constants.success.msg_reg_update);
+            }
+            callback("Nothing");
         }
     });
 }

@@ -39,6 +39,10 @@
       "result": "success",
       "message": "Device successfully registered."
     },
+    "msg_reg_update": {
+      "result": "success",
+      "message": "Device successfully updated."
+    },
     "msg_del_success": {
       "result": "success",
       "message": "Device successfully removed"
